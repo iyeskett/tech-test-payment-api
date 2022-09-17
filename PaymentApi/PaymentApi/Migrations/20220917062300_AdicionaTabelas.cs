@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace PaymentApi.Migrations
 {
-    public partial class AdicionaTabelasVendasEVendedores : Migration
+    public partial class AdicionaTabelas : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -33,7 +33,8 @@ namespace PaymentApi.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     VendedorId = table.Column<int>(type: "int", nullable: false),
                     Data = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Itens = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Itens = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    StatusVenda = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {

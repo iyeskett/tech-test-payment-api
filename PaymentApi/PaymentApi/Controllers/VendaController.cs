@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using PaymentApi.Context;
 using PaymentApi.Entities;
 
@@ -10,6 +11,7 @@ namespace PaymentApi.Controllers
     {
         private readonly PaymentContext _context;
         private Vendedor vendedor;
+        private PaymentDto _paymentDto;
 
         public VendaController(PaymentContext context)
         {
@@ -32,8 +34,22 @@ namespace PaymentApi.Controllers
         public IActionResult ObterTodasVendas()
         {
             var vendas = _context.Vendas.ToList();
-            return Ok(vendas);
+            PaymentDto paymentDto;
+
+            List<PaymentDto> payments = new List<PaymentDto>();
+
+            foreach (var venda in vendas)
+            {
+                paymentDto = new PaymentDto();
+                paymentDto.AdicionaVenda(venda);
+                paymentDto.AdicionaVendedor(ValidadorAtualizacao.GetVendedor(venda.IdVendedor, _context));
+                payments.Add(paymentDto);
+            }
+
+            return Ok(payments);
         }
+
+        
 
         [HttpGet("ObterVendaPorId/{id}")]
         public IActionResult ObterPorId(int id)
@@ -60,8 +76,16 @@ namespace PaymentApi.Controllers
         }
     }
 
+
+
     public static class ValidadorAtualizacao
     {
+        public static Vendedor GetVendedor(int id, PaymentContext paymentContext)
+        {
+            var vendedor = paymentContext.Vendedores.Find(id);
+            return vendedor;
+        }
+
         public static bool PodeAtualizar(Venda venda, Venda vendaBanco)
         {
             if (vendaBanco.StatusVenda.Equals("Aguardando Pagamento"))

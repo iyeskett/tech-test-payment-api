@@ -12,8 +12,8 @@ using PaymentApi.Context;
 namespace PaymentApi.Migrations
 {
     [DbContext(typeof(PaymentContext))]
-    [Migration("20220916232110_AdicionaTabelasVendasEVendedores")]
-    partial class AdicionaTabelasVendasEVendedores
+    [Migration("20220917064706_AtualizaTabelas")]
+    partial class AtualizaTabelas
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -35,16 +35,18 @@ namespace PaymentApi.Migrations
                     b.Property<DateTime>("Data")
                         .HasColumnType("datetime2");
 
+                    b.Property<int>("IdVendedor")
+                        .HasColumnType("int");
+
                     b.Property<string>("Itens")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("VendedorId")
-                        .HasColumnType("int");
+                    b.Property<string>("StatusVenda")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("VendedorId");
 
                     b.ToTable("Vendas");
                 });
@@ -76,17 +78,6 @@ namespace PaymentApi.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Vendedores");
-                });
-
-            modelBuilder.Entity("PaymentApi.Entities.Venda", b =>
-                {
-                    b.HasOne("PaymentApi.Entities.Vendedor", "Vendedor")
-                        .WithMany()
-                        .HasForeignKey("VendedorId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Vendedor");
                 });
 #pragma warning restore 612, 618
         }

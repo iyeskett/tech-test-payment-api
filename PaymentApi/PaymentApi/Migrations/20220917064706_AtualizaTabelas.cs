@@ -4,7 +4,7 @@
 
 namespace PaymentApi.Migrations
 {
-    public partial class AtualizaTabelaVenda : Migration
+    public partial class AtualizaTabelas : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
