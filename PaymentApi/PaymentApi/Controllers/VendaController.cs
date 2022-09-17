@@ -42,7 +42,7 @@ namespace PaymentApi.Controllers
             {
                 paymentDto = new PaymentDto();
                 paymentDto.AdicionaVenda(venda);
-                paymentDto.AdicionaVendedor(ValidadorAtualizacao.GetVendedor(venda.IdVendedor, _context));
+                paymentDto.AdicionaVendedor(Validador.GetVendedor(venda.IdVendedor, _context));
                 payments.Add(paymentDto);
             }
 
@@ -56,7 +56,11 @@ namespace PaymentApi.Controllers
         {
             var venda = _context.Vendas.Find(id);
             if (venda == null) return NotFound();
-            return Ok(venda);
+            PaymentDto paymentDto;
+            paymentDto = new PaymentDto();
+            paymentDto.AdicionaVenda(venda);
+            paymentDto.AdicionaVendedor(Validador.GetVendedor(venda.IdVendedor, _context));
+            return Ok(paymentDto);
         }
 
         [HttpPut("AtualizarStatus/{id}")]
@@ -64,7 +68,7 @@ namespace PaymentApi.Controllers
         {
             var vendaBanco = _context.Vendas.Find(id);
             if (venda == null) return NotFound();
-            if (ValidadorAtualizacao.PodeAtualizar(venda, vendaBanco))
+            if (Validador.PodeAtualizar(venda, vendaBanco))
             {
                 vendaBanco.StatusVenda = venda.StatusVenda;
                 _context.SaveChanges();
@@ -78,7 +82,7 @@ namespace PaymentApi.Controllers
 
 
 
-    public static class ValidadorAtualizacao
+    public static class Validador
     {
         public static Vendedor GetVendedor(int id, PaymentContext paymentContext)
         {
